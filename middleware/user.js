@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { JWT_USER_PASSWORD } from '../config';
+import { JWT_USER_PASSWORD } from '../config.js';
 
 
 const userMiddleware = (req,res,next)=>{
@@ -17,6 +17,4 @@ const userMiddleware = (req,res,next)=>{
     }
 }
 
-module.exports = {
-    userMiddleware: userMiddleware
-}
+export { userMiddleware };

@@ -1,17 +1,17 @@
-const { Router } = require("express");
-const { userModel, purchaseModel, courseModel } = require("../db");
-const jwt = require("jsonwebtoken");
-const  { JWT_USER_PASSWORD } = require("../config");
-const { userMiddleware } = require("../middleware/user");
+import { Router } from "express";
+import { UserModel, PurchaseModel, CourseModel } from "../db.js";
+import jwt from "jsonwebtoken";
+import { JWT_USER_PASSWORD } from "../config.js";
+import { userMiddleware } from "../middleware/user.js";
 
 const userRouter = Router();
 
 userRouter.post("/signup", async function(req, res) {
-    const { email, password, firstName, lastName } = req.body; 
+    const { email, password, firstName, lastName } = req.body;
 
 
 
-    await userModel.create({
+    await UserModel.create({
         email: email,
         password: password,
         firstName: firstName, 
@@ -26,17 +26,16 @@ userRouter.post("/signup", async function(req, res) {
 userRouter.post("/signin",async function(req, res) {
     const { email, password } = req.body;
 
-
-    const user = await userModel.findOne({
+  
+    const user = await UserModel.findOne({
         email: email,
         password: password
-    });
+    }); 
 
     if (user) {
         const token = jwt.sign({
             id: user._id,
         }, JWT_USER_PASSWORD);
-
 
 
         res.json({
@@ -52,7 +51,7 @@ userRouter.post("/signin",async function(req, res) {
 userRouter.get("/purchases", userMiddleware, async function(req, res) {
     const userId = req.userId;
 
-    const purchases = await purchaseModel.find({
+    const purchases = await PurchaseModel.find({
         userId,
     });
 
@@ -62,7 +61,7 @@ userRouter.get("/purchases", userMiddleware, async function(req, res) {
         purchasedCourseIds.push(purchases[i].courseId)
     }
 
-    const coursesData = await courseModel.find({
+    const coursesData = await CourseModel.find({
         _id: { $in: purchasedCourseIds }
     })
 
@@ -72,6 +71,5 @@ userRouter.get("/purchases", userMiddleware, async function(req, res) {
     })
 })
 
-module.exports = {
-    userRouter: userRouter
-}
+
+export { userRouter };
