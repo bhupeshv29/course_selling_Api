@@ -30,7 +30,7 @@ adminRouter.post("/signin", async function(req, res) {
         email: email,
         password: password
     });
-
+1
     if (admin) {
         const token = jwt.sign({
             id: admin._id
